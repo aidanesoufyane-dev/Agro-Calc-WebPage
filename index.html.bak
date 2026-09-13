@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AgroCalc Pro — Professional fertigation calculator for agronomists. NPK calculation, ionic balance, tank distribution and PDF reports. / Calculateur de fertigation professionnel pour agronomes.">
+    <meta name="keywords" content="fertigation, NPK calculator, ionic balance, agriculture, drip irrigation, agronomy, agriculture de précision">
+    <meta property="og:title" content="AgroCalc Pro — Fertigation Intelligence">
+    <meta property="og:description" content="Professional NPK calculator for modern precision agriculture">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#1B5E20">
+    <link rel="icon" href="logo.png">
+    <title>AgroCalc Pro — Fertigation Intelligence</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --green-900: #0A2E1A;
+            --green-800: #1B5E20;
+            --green-600: #43A047;
+            --green-700: #2E7D32;
+            --green-500: #4CAF50;
+            --green-400: #66BB6A;
+            --lime: #8BC34A;
+            --sand: #F5F0E8;
+            --cream: #FAFAF7;
+            --soil: #4E342E;
+            --amber: #F57F17;
+            --white: #FFFFFF;
+            --text-dark: #1A2E1A;
+            --text-gray: #546E7A;
+            --font-heading: 'Playfair Display', serif;
+            --font-body: 'DM Sans', sans-serif;
+            --font-mono: 'DM Mono', monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--text-dark);
+            background-color: var(--cream);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* Language Toggle System */
+        html[lang="en"] .fr { display: none !important; }
+        html[lang="fr"] .en { display: none !important; }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Utilities */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .section-label {
+            display: inline-block;
+            color: var(--green-700);
+            font-family: var(--font-body);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 13px;
+            margin-bottom: 16px;
+        }
+
+        .section-label.light { color: var(--lime); }
+        .text-center { text-align: center; }
+        
+        /* Animations */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(3deg); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Navbar */
+        nav {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            background: rgba(10, 46, 26, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            padding: 20px 0;
+        }
+
+        nav.scrolled {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            background: rgba(10, 46, 26, 0.98);
+        }
+
+        .nav-container { display: flex; justify-content: space-between; align-items: center; }
+
+        .nav-logo-img { width: 32px; height: 32px; border-radius: 6px; }
+
+        .nav-logo {
+            color: var(--lime);
+            font-family: var(--font-heading);
+            font-size: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+        }
+        
+        .footer-logo-img { width: 40px; height: 40px; border-radius: 8px; margin-bottom: 8px;}
+
+        .nav-links { display: flex; gap: 24px; align-items: center; }
+
+        .nav-links a, .lang-toggle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover, .nav-links a.active, .lang-toggle:hover { color: var(--lime); }
+        
+        .lang-switcher {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            background: rgba(255,255,255,0.1);
+            padding: 4px 12px;
+            border-radius: 50px;
+            margin-left: 8px;
+        }
+        
+        .lang-toggle.active-lang { color: var(--lime); font-weight: 700;}
+
+        .nav-cta {
+            background-color: var(--lime);
+            color: var(--green-900) !important;
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: 600 !important;
+            transition: transform 0.2s, background-color 0.2s !important;
+        }
+
+        .nav-cta:hover {
+            transform: scale(1.05);
+            background-color: #AED581;
+        }
+
+        .hamburger { display: none; background: none; border: none; color: var(--white); cursor: pointer; }
+        .hamburger svg { width: 24px; height: 24px; fill: currentColor; }
+
+        /* Hero */
+        #hero {
+            height: 100vh; min-height: 700px;
+            background: linear-gradient(135deg, #0A2E1A 0%, #1B5E20 50%, #2E7D32 100%);
+            position: relative; display: flex; align-items: center; justify-content: center; text-align: center;
+            overflow: hidden; padding-top: 80px;
+        }
+
+        /* Grain Texture */
+        #hero::before {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.04; pointer-events: none;
+        }
+
+        .hero-circle-1 { position: absolute; top: -100px; right: -100px; width: 400px; height: 400px; border-radius: 50%; background: rgba(139, 195, 74, 0.08); pointer-events: none; }
+        .hero-circle-2 { position: absolute; bottom: 10%; left: 5%; width: 200px; height: 200px; border-radius: 50%; background: rgba(139, 195, 74, 0.05); pointer-events: none; }
+        .hero-leaf { position: absolute; top: 20%; left: 15%; width: 80px; height: 80px; fill: var(--lime); opacity: 0.15; animation: float 6s ease-in-out infinite; pointer-events: none; }
+
+        .hero-content { position: relative; z-index: 2; max-width: 800px; padding: 0 20px; }
+
+        .hero-badge {
+            display: inline-block; background: rgba(139, 195, 74, 0.15); border: 1px solid rgba(139, 195, 74, 0.3);
+            color: var(--lime); font-family: var(--font-body); font-size: 13px; font-weight: 500;
+            padding: 6px 16px; border-radius: 50px; margin-bottom: 24px; animation: fadeInUp 0.8s ease 0s backwards;
+        }
+
+        .hero-title { font-size: 68px; line-height: 1.1; margin-bottom: 24px; animation: fadeInUp 0.8s ease 0.2s backwards; }
+        .hero-title .line-1 { color: var(--white); display: block; }
+        .hero-title .line-2 { color: var(--lime); display: block; }
+
+        .hero-subtitle {
+            font-size: 18px; color: rgba(255, 255, 255, 0.75); max-width: 600px; margin: 0 auto 40px;
+            animation: fadeInUp 0.8s ease 0.4s backwards;
+        }
+
+        .hero-buttons { display: flex; gap: 16px; justify-content: center; margin-bottom: 60px; animation: fadeInUp 0.8s ease 0.6s backwards; }
+
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: 50px;
+            font-weight: 600; font-family: var(--font-body); font-size: 16px; transition: all 0.3s ease; cursor: pointer;
+        }
+
+        .btn-primary { background-color: var(--lime); color: var(--green-900); border: none; }
+        .btn-primary:hover {
+            transform: scale(1.03); background: linear-gradient(90deg, #8BC34A, #AED581, #8BC34A);
+            background-size: 200% auto; animation: shimmer 2s linear infinite;
+        }
+
+        .btn-secondary { background-color: transparent; color: var(--white); border: 1px solid var(--white); }
+        .btn-secondary:hover { background-color: var(--white); color: var(--green-900); }
+
+        .hero-stats {
+            display: flex; justify-content: center; border-top: 1px solid rgba(255, 255, 255, 0.15);
+            padding-top: 40px; animation: fadeInUp 0.8s ease 0.8s backwards;
+        }
+
+        .stat-item { padding: 0 40px; position: relative; }
+        .stat-item:not(:last-child)::after { content: ""; position: absolute; right: 0; top: 50%; transform: translateY(-50%); height: 40px; width: 1px; background: rgba(255, 255, 255, 0.15); }
+        .stat-number { font-family: var(--font-mono); color: var(--lime); font-size: 36px; font-weight: 500; line-height: 1; margin-bottom: 4px; }
+        .stat-label { color: rgba(255, 255, 255, 0.6); font-size: 13px; }
+
+        .hero-scroll { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); color: rgba(255, 255, 255, 0.5); animation: bounce 2s infinite; }
+
+        /* Section: About */
+        #about { background-color: var(--cream); padding: 100px 0; }
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+        .about-title { font-size: 42px; color: var(--text-dark); margin-bottom: 24px; line-height: 1.2; }
+        .about-text { font-size: 16px; color: var(--text-gray); line-height: 1.8; margin-bottom: 24px; }
+        .feature-chips { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+        .chip { background-color: #E8F5E9; color: #1B5E20; padding: 8px 16px; border-radius: 50px; font-size: 13px; font-weight: 600; }
+        .about-image-wrapper { background: linear-gradient(135deg, #1B5E20, #2E7D32); border-radius: 24px; height: 500px; display: flex; align-items: center; justify-content: center; box-shadow: 0 40px 80px rgba(27, 94, 32, 0.3); transform: rotate(2deg); overflow: hidden; padding: 20px; }
+        .screenshot-placeholder { background: linear-gradient(135deg, rgba(27,94,32,0.8), rgba(46,125,50,0.6)); border-radius: 16px; display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; border: 1px dashed rgba(139,195,74,0.4); color: var(--lime); font-family: var(--font-body); }
+        .about-image-wrapper img { max-width: 100%; max-height: 100%; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+
+        /* Section: Features */
+        #features { background: linear-gradient(180deg, #0A2E1A 0%, #1B5E20 100%); padding: 100px 0; color: var(--white); }
+        .features-header { text-align: center; margin-bottom: 60px; }
+        .features-title { font-size: 42px; line-height: 1.2; }
+        .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .feature-card { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 32px; transition: all 0.3s ease; position: relative; }
+        .feature-card:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(139, 195, 74, 0.3); transform: translateY(-4px); }
+        .feature-icon { width: 48px; height: 48px; background: rgba(139, 195, 74, 0.15); border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 24px; fill: var(--lime); }
+        .feature-icon svg { width: 24px; height: 24px; }
+        .feature-card-title { font-size: 20px; margin-bottom: 12px; font-family: var(--font-heading); }
+        .feature-card-desc { font-size: 14px; color: rgba(255, 255, 255, 0.7); line-height: 1.6; }
+        .feature-tag { position: absolute; top: 24px; right: 24px; background: rgba(255, 255, 255, 0.1); padding: 4px 10px; border-radius: 50px; font-size: 11px; color: var(--lime); font-family: var(--font-mono); }
+
+        /* Section: How it works */
+        #how-it-works { background-color: var(--sand); padding: 100px 0; }
+        .how-header { text-align: center; margin-bottom: 60px; }
+        .how-title { font-size: 42px; color: var(--text-dark); line-height: 1.2; }
+        .steps-container { display: flex; flex-direction: column; gap: 80px; position: relative; }
+        .steps-container::before { content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; background: repeating-linear-gradient(to bottom, var(--lime) 0, var(--lime) 10px, transparent 10px, transparent 20px); transform: translateX(-50%); z-index: 0; }
+        .step-row { display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 1; }
+        .step-row:nth-child(even) { flex-direction: row-reverse; }
+        .step-content { width: 45%; position: relative; }
+        .step-number-bg { font-family: var(--font-mono); font-size: 80px; color: var(--lime); opacity: 0.15; position: absolute; top: -40px; left: -20px; font-weight: 700; z-index: -1; }
+        .step-circle { position: absolute; top: -20%; left: 10%; transform: translate(-50%, -50%); width: 48px; height: 48px; background: var(--lime); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--white); font-weight: bold; font-family: var(--font-mono); z-index: 2; }
+        .step-title { font-size: 28px; margin-bottom: 16px; color: var(--green-900); }
+        .step-desc { font-size: 16px; color: var(--text-gray); }
+        .step-image { width: 45%; display: flex; justify-content: center; }
+        .step-image .screenshot-placeholder, .step-image img { border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); max-width: 250px; height: 500px; }
+
+        /* Section: Tank System */
+        #tanks { background-color: var(--white); padding: 100px 0; text-align: center; }
+        .tanks-title { font-size: 42px; color: var(--text-dark); line-height: 1.2; margin-bottom: 16px; }
+        .tanks-subtitle { font-size: 18px; color: var(--text-gray); max-width: 600px; margin: 0 auto 60px; }
+        .tank-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; text-align: left; margin-bottom: 40px; }
+        .tank-card { border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); background: var(--cream); border: 1px solid rgba(0,0,0,0.05); display: flex; flex-direction: column; }
+        .tank-header { padding: 24px; color: var(--white); position: relative; }
+        .tank-a .tank-header { background: linear-gradient(135deg, #1B5E20, #0A2E1A); }
+        .tank-b .tank-header { background: linear-gradient(135deg, #0D47A1, #082280); }
+        .tank-c .tank-header { background: linear-gradient(135deg, #B71C1C, #7F0000); }
+        .tank-icon { fill: var(--lime); width: 24px; height: 24px; margin-bottom: 12px; }
+        .tank-a .tank-icon { fill: var(--lime); }
+        .tank-b .tank-icon { fill: #90CAF9; }
+        .tank-c .tank-icon { fill: #EF9A9A; }
+        .tank-name { font-size: 22px; font-family: var(--font-heading); margin-bottom: 4px; }
+        .tank-subname { font-size: 13px; opacity: 0.7; font-family: var(--font-body); }
+        .tank-content { padding: 24px; flex-grow: 1; }
+        .tank-list { list-style: none; }
+        .tank-list li { font-size: 14px; margin-bottom: 12px; display: flex; align-items: center; color: var(--text-dark); }
+        .tank-list li span { margin-right: 8px; font-weight: bold; }
+        .tank-list li .check { color: var(--green-500); }
+        .tank-list li .move { color: var(--amber); }
+        .tank-footer { padding: 16px 24px; background: rgba(0,0,0,0.02); border-top: 1px solid rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; }
+        .volume-pill { background: var(--white); padding: 4px 12px; border-radius: 50px; font-size: 12px; font-family: var(--font-mono); font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .tank-note { font-size: 11px; color: var(--text-gray); }
+        .algorithm-box { background: #E8F5E9; border: 1px solid #A5D6A7; border-radius: 16px; padding: 24px; max-width: 600px; margin: 0 auto; text-align: left; }
+        .algo-title { color: var(--green-800); font-weight: bold; margin-bottom: 16px; }
+        .algo-code { background: var(--green-900); color: var(--lime); font-family: var(--font-mono); padding: 16px; border-radius: 8px; font-size: 13px; white-space: pre-wrap; line-height: 1.5; }
+
+        /* Section: Screenshots */
+        #screenshots { background-color: var(--green-900); padding: 100px 0; color: var(--white); text-align: center; }
+        .screens-title { font-size: 42px; margin-bottom: 60px; }
+        .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+        .gallery-item { display: flex; flex-direction: column; align-items: center; }
+        .gallery-card { background: rgba(255,255,255,0.05); border-radius: 24px; padding: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.4); transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); width: 100%; height: 450px; margin-bottom: 16px; display: flex; justify-content: center; }
+        .gallery-card:hover { transform: scale(1.03) translateY(-8px); background: rgba(255,255,255,0.1); }
+        .gallery-card img, .gallery-card .screenshot-placeholder { width: 100%; height: 100%; object-fit: contain; border-radius: 16px; }
+        .gallery-card .screenshot-placeholder { height: auto; }
+        .gallery-caption { font-size: 13px; color: rgba(255, 255, 255, 0.7); }
+
+        /* Section: Chemistry Table */
+        #chemistry { background-color: var(--sand); padding: 80px 0; }
+        .table-title { font-size: 32px; text-align: center; margin-bottom: 40px; color: var(--text-dark); }
+        .table-wrapper { overflow-x: auto; background: var(--white); border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid #C8E6C9; }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th, td { padding: 16px 24px; border-bottom: 1px solid #C8E6C9; }
+        th { background-color: var(--green-800); color: var(--white); font-weight: bold; white-space: nowrap; }
+        tr:nth-child(even) { background-color: #F1F8E9; }
+        tr:hover { background-color: #E8F5E9; }
+        td { font-size: 14px; }
+        td:nth-child(2), td:nth-child(3) { font-family: var(--font-mono); }
+        .tank-pill { display: inline-block; padding: 4px 10px; border-radius: 50px; font-size: 11px; font-weight: bold; color: var(--white); text-align: center; min-width: 60px; }
+        .pill-a { background-color: var(--green-600); }
+        .pill-b { background-color: #1976D2; }
+        .pill-c { background-color: #D32F2F; }
+        .pill-ab { background: linear-gradient(90deg, var(--green-600) 50%, #1976D2 50%); }
+
+        /* Section: Download */
+        #download { background: linear-gradient(135deg, #1B5E20, #0A2E1A); padding: 120px 0; text-align: center; color: var(--white); position: relative; overflow: hidden; }
+        .dl-title { font-size: 52px; line-height: 1.1; margin-bottom: 16px; position: relative; z-index: 2; }
+        .dl-subtitle { font-size: 18px; color: rgba(255,255,255,0.75); margin-bottom: 40px; position: relative; z-index: 2; }
+        .dl-note { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 20px; position: relative; z-index: 2; }
+
+        /* Footer */
+        footer { background-color: var(--green-900); padding: 60px 0 30px; color: var(--white); }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+        .footer-logo { color: var(--lime); font-family: var(--font-heading); font-size: 20px; margin-bottom: 8px; display: flex; align-items: center; gap: 10px;}
+        .footer-tagline { font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 16px; }
+        .footer-desc { font-size: 12px; color: rgba(255,255,255,0.4); max-width: 250px; }
+        .footer-col-title { font-size: 12px; font-weight: bold; color: rgba(255,255,255,0.6); margin-bottom: 16px; text-transform: uppercase;}
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 12px; }
+        .footer-links a { color: rgba(255,255,255,0.5); font-size: 14px; transition: color 0.2s; cursor: pointer; }
+        .footer-links a:hover { color: var(--lime); }
+        .footer-text { color: rgba(255,255,255,0.4); font-size: 12px; margin-top: 16px; }
+        .footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; text-align: center; font-size: 11px; color: rgba(255,255,255,0.3); }
+
+        /* Privacy Policy Page */
+        #privacy-page { display: none; }
+        .privacy-hero { background: linear-gradient(135deg, #0A2E1A, #1B5E20); height: 300px; display: flex; align-items: center; justify-content: center; text-align: center; color: white; padding-top: 80px; }
+        .privacy-title { font-size: 42px; margin-bottom: 8px; }
+        .privacy-subtitle { font-size: 16px; color: rgba(255,255,255,0.6); margin-bottom: 24px;}
+        .privacy-back { color: var(--lime); cursor: pointer; font-weight: bold; font-size: 14px; }
+        .privacy-back:hover { text-decoration: underline; }
+        .privacy-content { max-width: 800px; margin: -40px auto 60px; background: var(--cream); padding: 60px 40px; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.05); color: var(--text-gray); font-size: 16px; }
+        .privacy-content h2 { color: var(--green-800); font-family: var(--font-heading); font-size: 24px; border-bottom: 2px solid #E8F5E9; padding-bottom: 8px; margin: 40px 0 16px; }
+        .privacy-content p { margin-bottom: 16px; }
+        .privacy-content ul { list-style: none; margin-bottom: 24px; }
+        .privacy-content li { margin-bottom: 8px; display: flex; align-items: flex-start; }
+        .privacy-content li::before { content: "✓"; color: var(--green-500); font-weight: bold; margin-right: 8px; }
+        .contact-card { border: 1px solid var(--green-400); padding: 24px; border-radius: 8px; background: #E8F5E9; margin-top: 24px; color: var(--green-900); }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-title { font-size: 52px; }
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+            .tank-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .nav-links, .nav-cta { display: none; }
+            .hamburger { display: block; }
+            nav.nav-open .nav-links { display: flex; flex-direction: column; position: absolute; top: 100%; left: 0; width: 100%; background: var(--green-900); padding: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+            nav.nav-open .nav-cta { display: inline-block; margin-top: 10px; }
+            .hero-title { font-size: 42px; }
+            .hero-stats { flex-direction: column; gap: 24px; border-top: none; }
+            .stat-item:not(:last-child)::after { display: none; }
+            .hero-buttons { flex-direction: column; }
+            .about-grid { grid-template-columns: 1fr; }
+            .features-grid { grid-template-columns: 1fr; }
+            .steps-container::before { left: 24px; }
+            .step-row, .step-row:nth-child(even) { flex-direction: column; align-items: flex-start; gap: 32px; padding-left: 60px; }
+            .step-content, .step-image { width: 100%; }
+            .step-circle { left: -36Spx; }
+            .step-number-bg { display: none; }
+            .gallery-grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 20px; }
+            .gallery-item { min-width: 80vw; scroll-snap-align: center; }
+            .footer-grid { grid-template-columns: 1fr; gap: 32px; }
+            .privacy-content { margin: 0; border-radius: 0; padding: 40px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="container nav-container">
+            <div class="nav-logo" onclick="showPage('landing')">
+                <img src="logo.png" class="nav-logo-img" alt="AgroCalc Logo" onerror="this.style.display='none'">
+                <span>AgroCalc Pro</span>
+            </div>
+            <div class="nav-links">
+                <a href="#features" class="site-link" onclick="handleNavClick('landing', 'features')">
+                    <span class="en">Features</span><span class="fr">Fonctionnalités</span>
+                </a>
+                <a href="#how-it-works" class="site-link" onclick="handleNavClick('landing', 'how-it-works')">
+                    <span class="en">How It Works</span><span class="fr">Fonctionnement</span>
+                </a>
+                <a href="#screenshots" class="site-link" onclick="handleNavClick('landing', 'screenshots')">
+                    <span class="en">Screenshots</span><span class="fr">Captures</span>
+                </a>
+                <a href="#" onclick="showPage('privacy'); return false;">
+                    <span class="en">Privacy</span><span class="fr">Confidentialité</span>
+                </a>
+                <a href="#download" class="btn nav-cta site-link" onclick="handleNavClick('landing', 'download')">
+                    <span class="en">Download</span><span class="fr">Télécharger</span>
+                </a>
+                
+                <div class="lang-switcher">
+                    <span class="lang-toggle active-lang" onclick="setLang('en')">EN</span>
+                    <span style="color: rgba(255,255,255,0.3)">|</span>
+                    <span class="lang-toggle" onclick="setLang('fr')">FR</span>
+                </div>
+            </div>
+            <button class="hamburger" onclick="toggleMenu()">
+                <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- LANDING PAGE -->
+    <div id="landing-page" class="page active">
+        
+        <!-- Hero Section -->
+        <section id="hero">
+            <div class="hero-circle-1"></div>
+            <div class="hero-circle-2"></div>
+            
+            <div class="container hero-content">
+           
+                <div class="hero-badge">
+                    <span class="en">🌿 Fertigation Intelligence</span>
+                    <span class="fr">🌿 Intelligence Fertigation</span>
+                </div>
+                
+                <br>
+                <br>
+                <h1 class="hero-title">
+                    <span class="line-1 en">Precision Nutrition</span>
+                    <span class="line-1 fr">Nutrition de Précision</span>
+                    <span class="line-2 en">for Modern Farming</span>
+                    <span class="line-2 fr">pour Fermes Modernes</span>
+                </h1>
+                <p class="hero-subtitle">
+                    <span class="en">The professional fertigation calculator trusted by agronomists. Calculate NPK solutions, balance your tanks, and generate field-ready reports — all from your phone.</span>
+                    <span class="fr">Le calculateur de fertigation professionnel adoré des agronomes. Calculez vos solutions NPK, équilibrez vos bacs et générez des rapports professionnels — directement sur votre téléphone.</span>
+                </p>
+                <div class="hero-buttons">
+                    <a href="#download" class="btn btn-primary">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" /></svg>
+                        <span class="en">Download Free</span>
+                        <span class="fr">Télécharger Gratuit</span>
+                    </a>
+                    <a href="#how-it-works" class="btn btn-secondary">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8,5.14V19.14L19,12.14L8,5.14Z" /></svg>
+                        <span class="en">Watch How It Works</span>
+                        <span class="fr">Voir le fonctionnement</span>
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-number">14</div>
+                        <div class="stat-label">
+                            <span class="en">Fertilizers Supported</span><span class="fr">Engrais Supportés</span>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">3</div>
+                        <div class="stat-label">
+                            <span class="en">Balanced Tanks</span><span class="fr">Bacs Équilibrés</span>
+                        </div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">1 000 L</div>
+                        <div class="stat-label">
+                            <span class="en">Per Tank Volume</span><span class="fr">Volume / Bac</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about">
+            <div class="container about-grid">
+                <div class="about-content animate-on-scroll">
+                    <span class="section-label">
+                        <span class="en">About The App</span><span class="fr">À Propos</span>
+                    </span>
+                    <h2 class="about-title">
+                        <span class="en">Built for the Field.<br>Designed for Precision.</span>
+                        <span class="fr">Conçu pour le terrain.<br>Bâti pour la Précision.</span>
+                    </h2>
+                    <p class="about-text">
+                        <span class="en">AgroCalc Pro is a professional mobile application for managing fertigation nutritional solutions in drip irrigation systems. It performs complex NPK calculations that previously required spreadsheets or desktop software — now available in your pocket.</span>
+                        <span class="fr">AgroCalc Pro est une application mobile professionnelle dédiée à la gestion des solutions nutritives en fertigation. Elle effectue les calculs NPK complexes qui autrefois nécessitaient des logiciels lourds, désormais dans votre poche.</span>
+                    </p>
+                    <p class="about-text">
+                        <span class="en">Designed with real agrochemical compatibility rules, the app automatically separates fertilizers into 3 tanks to prevent calcium precipitation, then balances tank concentrations so both empty simultaneously during irrigation.</span>
+                        <span class="fr">Basée sur les vraies règles de compatibilité agrochimique, l'app sépare vos engrais en 3 bacs (A, B, C) pour éviter les précipitations, et équilibre leurs masses pour qu'ils se vident simultanément.</span>
+                    </p>
+                    <div class="feature-chips">
+                        <span class="chip">NPK Calculator</span>
+                        <span class="chip">Tank Distribution</span>
+                        <span class="chip">PDF Reports</span>
+                    </div>
+                </div>
+                <div class="about-image animate-on-scroll">
+                    <div class="about-image-wrapper">
+                        <img src="screens/home.jpeg" alt="App Screenshot — Home" onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>App Screenshot — Home</span></div>'">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features">
+            <div class="container">
+                <div class="features-header animate-on-scroll">
+                    <span class="section-label light">
+                        <span class="en">Features</span><span class="fr">Fonctionnalités</span>
+                    </span>
+                    <h2 class="features-title">
+                        <span class="en">Everything You Need.<br>Nothing You Don't.</span>
+                        <span class="fr">Tout ce qu'il vous faut.<br>Rien de superflu.</span>
+                    </h2>
+                </div>
+                <div class="features-grid">
+                    <!-- Card 1 -->
+                    <div class="feature-card animate-on-scroll">
+                        <span class="feature-tag"><span class="en">14 Inputs</span><span class="fr">14 Entrées</span></span>
+                        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M7,2V4H8V18A4,4 0 0,0 12,22A4,4 0 0,0 16,18V4H17V2H7M11,16C10.4,16 10,15.6 10,15C10,14.4 10.4,14 11,14C11.6,14 12,14.4 12,15C12,15.6 11.6,16 11,16M13,12C12.4,12 12,11.6 12,11C12,10.4 12.4,10 13,10C13.6,10 14,10.4 14,11C14,11.6 13.6,12 13,12M14,7H10V4H14V7Z"/></svg></div>
+                        <h3 class="feature-card-title">
+                            <span class="en">NPK Calculator</span><span class="fr">Calculateur NPK</span>
+                        </h3>
+                        <p class="feature-card-desc">
+                            <span class="en">Input quantities for 14 fertilizers and instantly compute ionic balance, EC, and fertilizer units per hectare.</span>
+                            <span class="fr">Renseignez vos quantités pour 14 engrais et obtenez instantanément la balance ionique, l'EC et les unités fertilisantes.</span>
+                        </p>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="feature-card animate-on-scroll">
+                        <span class="feature-tag"><span class="en">9 Ions</span><span class="fr">9 Ions</span></span>
+                        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M12,2L15,7H9L12,2M12,9L16,16H8L12,9M12,18A3,3 0 0,0 15,21A3,3 0 0,0 18,18H12M6,18A3,3 0 0,0 9,21A3,3 0 0,0 12,18H6Z"/></svg></div>
+                        <h3 class="feature-card-title">
+                            <span class="en">Ionic Balance</span><span class="fr">Balance Ionique</span>
+                        </h3>
+                        <p class="feature-card-desc">
+                            <span class="en">Calculate meq/L concentration for every ion: NO₃⁻, NH₄⁺, H₂PO₄⁻, K⁺, SO₄²⁻, Ca²⁺, Mg²⁺ and more.</span>
+                            <span class="fr">Analysez la concentration en meq/L pour diagnostiquer : NO₃⁻, NH₄⁺, H₂PO₄⁻, K⁺, SO₄²⁻, Ca²⁺, Mg²⁺.</span>
+                        </p>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="feature-card animate-on-scroll">
+                        <span class="feature-tag"><span class="en">Real-time</span><span class="fr">Intégré</span></span>
+                        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M7,2V13H10V22L17,10H13L17,2H7Z"/></svg></div>
+                        <h3 class="feature-card-title">
+                            <span class="en">EC Analysis</span><span class="fr">Contrôle EC</span>
+                        </h3>
+                        <p class="feature-card-desc">
+                            <span class="en">Monitor electrical conductivity with a visual diagnostic bar. Get instant agronomic interpretation of your solution.</span>
+                            <span class="fr">Suivez la conductivité électrique de la solution. Jauge visuelle et interprétation instantanée pour protéger vos cultures.</span>
+                        </p>
+                    </div>
+                    <!-- Card 4 -->
+                    <div class="feature-card animate-on-scroll">
+                        <span class="feature-tag"><span class="en">3 Tanks</span><span class="fr">3 Bacs</span></span>
+                        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M15,2H19A2,2 0 0,1 21,4V20A2,2 0 0,1 19,22H15A2,2 0 0,1 13,20V4A2,2 0 0,1 15,2M3,2H7A2,2 0 0,1 9,4V20A2,2 0 0,1 7,22H3A2,2 0 0,1 1,20V4A2,2 0 0,1 3,2M15,4V20H19V4H15M3,4V20H7V4H3Z"/></svg></div>
+                        <h3 class="feature-card-title">
+                            <span class="en">Smart Tank Distribution</span><span class="fr">Distribution Intelligente</span>
+                        </h3>
+                        <p class="feature-card-desc">
+                            <span class="en">Automatically split fertilizers into 3 compatible 1000L tanks. Our algorithm balances concentrations so both tanks empty simultaneously.</span>
+                            <span class="fr">Sépare vos engrais dans 3 bacs (A, B, C) évitant les blocages. Notre algorithme équilibre les poids pour une vidange simultanée.</span>
+                        </p>
+                    </div>
+                    <!-- Card 5 -->
+                    <div class="feature-card animate-on-scroll">
+                        <span class="feature-tag"><span class="en">Shareable</span><span class="fr">Partage</span></span>
+                        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M16,11V18H8V11H16Z"/></svg></div>
+                        <h3 class="feature-card-title">
+                            <span class="en">PDF Report Export</span><span class="fr">Rapports PDF</span>
+                        </h3>
+                        <p class="feature-card-desc">
+                            <span class="en">Generate professional A4 reports with full analysis. Share via WhatsApp, Email, or Google Drive in one tap.</span>
+                            <span class="fr">Générez un bulletin A4 professionnel avec l'analyse complète. Partage facilement par WhatsApp ou Email.</span>
+                        </p>
+                    </div>
+                    <!-- Card 6 -->
+                    <div class="feature-card animate-on-scroll">
+                        <span class="feature-tag"><span class="en">AI-Assisted</span><span class="fr">Automatisé</span></span>
+                        <div class="feature-icon"><svg viewBox="0 0 24 24"><path d="M17,18C15.89,18 15,18.89 15,20A2,2 0 0,0 17,22A2,2 0 0,0 19,20C19,18.89 18.1,18 17,18M1,2V4H3L6.6,11.59L5.24,14.04C5.09,14.32 5,14.65 5,15A2,2 0 0,0 7,17H19V15H7.42A0.25,0.25 0 0,1 7.17,14.75C7.17,14.7 7.18,14.66 7.2,14.63L8.1,13H15.55C16.3,13 16.96,12.58 17.3,11.97L20.88,5.5C20.95,5.34 21,5.17 21,5A1,1 0 0,0 20,4H5.21L4.27,2M7,18C5.89,18 5,18.89 5,20A2,2 0 0,0 7,22A2,2 0 0,0 9,20C9,18.89 8.1,18 7,18Z"/></svg></div>
+                        <h3 class="feature-card-title">
+                            <span class="en">Agronomic Advice</span><span class="fr">Avis Agronomique</span>
+                        </h3>
+                        <p class="feature-card-desc">
+                            <span class="en">Get automated recommendations based on your solution analysis — EC levels, nitrogen form ratios, and ionic balance diagnostics.</span>
+                            <span class="fr">Diagnostics automatiques de votre balance : formes de l'azote N-NH4/N-NO3 et interprétation visuelle agronomique de vos résultats.</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How it Works Section -->
+        <section id="how-it-works">
+            <div class="container">
+                <div class="how-header animate-on-scroll">
+                    <span class="section-label">
+                        <span class="en">How It Works</span><span class="fr">Comment Ça Marche</span>
+                    </span>
+                    <h2 class="how-title">
+                        <span class="en">From Input to Field Report<br>in 3 Simple Steps</span>
+                        <span class="fr">De l'entrée au Terrain<br>en 3 Étapes Simples</span>
+                    </h2>
+                </div>
+                
+                <div class="steps-container">
+                    <!-- Step 1 -->
+                    <div class="step-row animate-on-scroll">
+                        <div class="step-content">
+                            <div class="step-number-bg">01</div>
+                            <div class="step-circle">1</div>
+                            <h3 class="step-title">
+                                <span class="en">Enter Your Fertilizers</span>
+                                <span class="fr">Saisissez les Engrais</span>
+                            </h3>
+                            <p class="step-desc">
+                                <span class="en">Input the quantity in kg for each of your 14 fertilizers. Set your tank volume, surface area in hectares, and EC baseline.</span>
+                                <span class="fr">Saisissez vos quantités en kg, le volume de vos bacs en litres, la surface couverte et l'EC d'apport d'eau.</span>
+                            </p>
+                        </div>
+                        <div class="step-image">
+                            <img src="screens/calculator.jpeg" alt="Step 1" onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Calculator Screen</span></div>'">
+                        </div>
+                    </div>
+                    
+                    <!-- Step 2 -->
+                    <div class="step-row animate-on-scroll">
+                        <div class="step-content">
+                            <div class="step-number-bg">02</div>
+                            <div class="step-circle">2</div>
+                            <h3 class="step-title">
+                                <span class="en">Calculate & Analyze</span>
+                                <span class="fr">Calculez et Analysez</span>
+                            </h3>
+                            <p class="step-desc">
+                                <span class="en">Tap Calculate. Instantly see your ionic balance, electrical conductivity, nitrogen form percentages, and fertilizer units per hectare.</span>
+                                <span class="fr">Validez le calcul. Visualisez votre Balance Ionique complète en meq/L et jauge dynamique pour l'Électroconductivité (EC).</span>
+                            </p>
+                        </div>
+                        <div class="step-image">
+                            <img src="screens/ionic.jpeg" alt="Step 2" onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Results Screen</span></div>'">
+                        </div>
+                    </div>
+                    
+                    <!-- Step 3 -->
+                    <div class="step-row animate-on-scroll">
+                        <div class="step-content">
+                            <div class="step-number-bg">03</div>
+                            <div class="step-circle">3</div>
+                            <h3 class="step-title">
+                                <span class="en">Distribute & Export</span>
+                                <span class="fr">Distribuer et Exporter</span>
+                            </h3>
+                            <p class="step-desc">
+                                <span class="en">Tap Distribute Tanks to split your formula into 3 compatible tanks. Then generate and share your professional PDF report.</span>
+                                <span class="fr">L'algorithme ventile vos apports dans les bacs A, B, C sans précipitations, et génère le rapport PDF partageable d'un clic.</span>
+                            </p>
+                        </div>
+                        <div class="step-image">
+                            <img src="screens/pdf.jpeg" alt="Step 3" onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>PDF Export Screen</span></div>'">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tank Explainer Section -->
+        <section id="tanks">
+            <div class="container">
+                <span class="section-label">
+                    <span class="en">Tank System</span><span class="fr">Gestion de Bacs</span>
+                </span>
+                <h2 class="tanks-title animate-on-scroll">
+                    <span class="en">3 Tanks. Perfect Balance.<br>Zero Precipitation.</span>
+                    <span class="fr">3 Bacs. Parfait Équilibre.<br>Zéro Blocages.</span>
+                </h2>
+                <p class="tanks-subtitle animate-on-scroll">
+                    <span class="en">Calcium precipitates with sulfates and phosphates when mixed at high concentration. AgroCalc Pro automatically separates them.</span>
+                    <span class="fr">Le Calcium forme des roches s'il est mixé aux Sulfates / Phosphates. Notre app gère l'exclusion et l'équilibrage des bacs A (Calcium)  B (Général) et C (Acide).</span>
+                </p>
+
+                <div class="tank-grid">
+                    <!-- Bac A -->
+                    <div class="tank-card tank-a animate-on-scroll">
+                        <div class="tank-header">
+                            <svg class="tank-icon" viewBox="0 0 24 24"><path d="M12,22A6,6 0 0,1 6,16C6,11 12,2 12,2C12,2 18,11 18,16A6,6 0 0,1 12,22Z"/></svg>
+                            <h3 class="tank-name">Bac A</h3>
+                            <div class="tank-subname">
+                                <span class="en">Calcium Solution</span><span class="fr">Solution au Calcium</span>
+                            </div>
+                        </div>
+                        <div class="tank-content">
+                            <ul class="tank-list">
+                                <li><span class="check">✓</span> Nitrate de Calcium</li>
+                                <li><span class="move">⬆</span> Nitrate K</li>
+                                <li><span class="move">⬆</span> Ammonitrate</li>
+                                <li><span class="move">⬆</span> Urea</li>
+                                <li><span class="move">⬆</span> N MgO</li>
+                            </ul>
+                        </div>
+                        <div class="tank-footer">
+                            <span class="tank-note">
+                                <span class="en">⬆ = transferred for balance</span><span class="fr">⬆ = Transféré pour équilibre</span>
+                            </span>
+                            <span class="volume-pill">1 000 L</span>
+                        </div>
+                    </div>
+
+                    <!-- Bac B -->
+                    <div class="tank-card tank-b animate-on-scroll">
+                        <div class="tank-header">
+                            <svg class="tank-icon" viewBox="0 0 24 24"><path d="M12,22A6,6 0 0,1 6,16C6,11 12,2 12,2C12,2 18,11 18,16A6,6 0 0,1 12,22Z"/></svg>
+                            <h3 class="tank-name">Bac B</h3>
+                            <div class="tank-subname">
+                                <span class="en">Main Solution</span><span class="fr">Solution Centrale</span>
+                            </div>
+                        </div>
+                        <div class="tank-content">
+                            <ul class="tank-list">
+                                <li><span class="check">✓</span> Sulfate de Potassium</li>
+                                <li><span class="check">✓</span> MAP</li>
+                                <li><span class="check">✓</span> CL,K</li>
+                                <li><span class="check">✓</span> S MgO</li>
+                                <li><span class="check">✓</span> SULFAT AMO21</li>
+                                <li><span class="check">✓</span> MKP</li>
+                                <li><span class="check">✓</span> Acide Phosphorique</li>
+                                <li><span class="check">✓</span> Acide Sulfurique</li>
+                            </ul>
+                        </div>
+                        <div class="tank-footer">
+                            <span class="tank-note">
+                                <span class="en">Main nutrient mix</span><span class="fr">Fond de nutrition mixte</span>
+                            </span>
+                            <span class="volume-pill">1 000 L</span>
+                        </div>
+                    </div>
+
+                    <!-- Bac C -->
+                    <div class="tank-card tank-c animate-on-scroll">
+                        <div class="tank-header">
+                            <svg class="tank-icon" viewBox="0 0 24 24"><path d="M12,22A6,6 0 0,1 6,16C6,11 12,2 12,2C12,2 18,11 18,16A6,6 0 0,1 12,22Z"/></svg>
+                            <h3 class="tank-name">Bac C</h3>
+                            <div class="tank-subname">
+                                <span class="en">Acid Solution</span><span class="fr">Solution d'Acides</span>
+                            </div>
+                        </div>
+                        <div class="tank-content">
+                            <ul class="tank-list">
+                                <li><span class="check">✓</span> Acide Nitrique</li>
+                            </ul>
+                        </div>
+                        <div class="tank-footer">
+                            <span class="tank-note">
+                                <span class="en">pH adjustment only</span><span class="fr">Redressement pH du bac seul</span>
+                            </span>
+                            <span class="volume-pill">1 000 L</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="algorithm-box animate-on-scroll">
+                    <div class="algo-title">
+                        <span class="en">Balance Algorithm</span><span class="fr">Algorithme de l'Équilibre</span>
+                    </div>
+                    <div class="algo-code en">Goal:    BacA (kg) = BacB (kg)
+Effect:  Same g/L concentration in 1000L
+Result:  Both tanks empty simultaneously
+
+Move order:  Nitrate K → Ammonitrate → Urea → N MgO
+Formula:     moveKg = min(diff ÷ 2, available)</div>
+<div class="algo-code fr">Objectif :    Poids Bac A (kg) = Bac B (kg)
+Effet :       Concentration g/L identique 
+Résultat :    Les deux bacs se vident en même temps
+
+Priorités :   Nitrate K → Ammonitrate → Urea → N MgO
+Formule :     moveKg = min(diff ÷ 2, quantité)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Screenshots Gallery Section -->
+        <section id="screenshots">
+            <div class="container">
+                <span class="section-label light">
+                    <span class="en">Screenshots</span><span class="fr">Captures</span>
+                </span>
+                <h2 class="screens-title animate-on-scroll">
+                    <span class="en">See It In Action</span><span class="fr">Visualisation de l'App</span>
+                </h2>
+                
+                <div class="gallery-grid">
+                    <div class="gallery-item animate-on-scroll">
+                        <div class="gallery-card">
+                            <img src="screens/splash.jpeg" alt="Splash Screen" onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Splash Screen</span></div>'">
+                        </div>
+                    </div>
+                    <div class="gallery-item animate-on-scroll">
+                        <div class="gallery-card">
+                            <img src="screens/home.jpeg" alt="Home Dashboard" onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Home Dashboard</span></div>'">
+                        </div>
+                    </div>
+                    <div class="gallery-item animate-on-scroll">
+                        <div class="gallery-card">
+                            <img src="screens/calculator.jpeg" alt="NPK Calculator" onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>NPK Calculator</span></div>'">
+                        </div>
+                    </div>
+                    <div class="gallery-item animate-on-scroll">
+                        <div class="gallery-card">
+                            <img src="screens/ionic.jpeg" alt="Calculation Results" onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Calculation Results</span></div>'">
+                        </div>
+                    </div>
+                    <div class="gallery-item animate-on-scroll">
+                        <div class="gallery-card">
+                            <img src="screens/bacs.jpeg" alt="Tank Distribution" onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>Tank Distribution</span></div>'">
+                        </div>
+                    </div>
+                    <div class="gallery-item animate-on-scroll">
+                        <div class="gallery-card">
+                            <img src="screens/pdf.jpeg" alt="PDF Report" onerror="this.outerHTML='<div class=\'screenshot-placeholder\'><span>PDF Report</span></div>'">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chemistry Table Section -->
+        <section id="chemistry">
+            <div class="container">
+                <span class="section-label text-center" style="display:block">
+                    <span class="en">Supported Fertilizers</span><span class="fr">Classification des Engrais</span>
+                </span>
+                <h2 class="table-title animate-on-scroll">
+                    <span class="en">14 Fertilizers. Complete Coverage.</span>
+                    <span class="fr">14 Entrants de Base de la Fertigation</span>
+                </h2>
+                
+                <div class="table-wrapper animate-on-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th><span class="en">Fertilizer</span><span class="fr">Engrais Commerciaux</span></th>
+                                <th><span class="en">Variable</span><span class="fr">Variable APP</span></th>
+                                <th><span class="en">Mol. Weight</span><span class="fr">Poids Molaire</span></th>
+                                <th><span class="en">Tank</span><span class="fr">Bacs Standards</span></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>MKP</td><td>mkpA17</td><td>136 g/mol</td><td><span class="tank-pill pill-b">Bac B</span></td></tr>
+                            <tr><td>Nitrate de Potassium</td><td>npA5</td><td>101 g/mol</td><td><span class="tank-pill pill-ab">Bac A/B</span></td></tr>
+                            <tr><td>Sulfate de Potassium</td><td>spA6</td><td>87 g/mol</td><td><span class="tank-pill pill-b">Bac B</span></td></tr>
+                            <tr><td>Nitrate de Calcium</td><td>calA7</td><td>82 g/mol</td><td><span class="tank-pill pill-a">Bac A</span></td></tr>
+                            <tr><td>Acide Nitrique</td><td>acidA8</td><td>63 g/mol</td><td><span class="tank-pill pill-c">Bac C</span></td></tr>
+                            <tr><td>Acide Phosphorique</td><td>aphA9</td><td>98 g/mol</td><td><span class="tank-pill pill-b">Bac B</span></td></tr>
+                            <tr><td>Ammonitrate</td><td>ammonA10</td><td>80 g/mol</td><td><span class="tank-pill pill-ab">Bac A/B</span></td></tr>
+                            <tr><td>MAP</td><td>mapA11</td><td>115 g/mol</td><td><span class="tank-pill pill-b">Bac B</span></td></tr>
+                            <tr><td>UREE</td><td>ureeA15</td><td>58 g/mol</td><td><span class="tank-pill pill-ab">Bac A/B</span></td></tr>
+                            <tr><td>Acide Sulfurique</td><td>ACIDSULB18</td><td>47 g/mol</td><td><span class="tank-pill pill-b">Bac B</span></td></tr>
+                            <tr><td>N MgO</td><td>nmgoA16</td><td>128 g/mol</td><td><span class="tank-pill pill-ab">Bac A/B</span></td></tr>
+                            <tr><td>SULFAT AMO21</td><td>sulamoA14</td><td>66 g/mol</td><td><span class="tank-pill pill-b">Bac B</span></td></tr>
+                            <tr><td>CL,K</td><td>chlorA12</td><td>75 g/mol</td><td><span class="tank-pill pill-b">Bac B</span></td></tr>
+                            <tr><td>S MgO</td><td>smgoA13</td><td>123.2 g/mol</td><td><span class="tank-pill pill-b">Bac B</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Download CTA Section -->
+        <section id="download">
+            <div class="hero-circle-1" style="opacity: 0.05"></div>
+            <div class="container relative z-2">
+                <h2 class="dl-title animate-on-scroll">
+                    <span class="en">Ready to Optimize<br>Your Fertigation?</span>
+                    <span class="fr">Prêt à Réinventer<br>Votre Fertigation ?</span>
+                </h2>
+                <p class="dl-subtitle animate-on-scroll">
+                    <span class="en">Download AgroCalc Pro free. Available on Android.</span>
+                    <span class="fr">L'agronomie de pointe en un clic. Téléchargez pour Android.</span>
+                </p>
+                <div class="animate-on-scroll">
+                    <a href="#" class="btn btn-primary" style="padding: 18px 40px; font-size: 18px;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M15,9A1,1 0 0,1 16,8A1,1 0 0,1 17,9A1,1 0 0,1 16,10A1,1 0 0,1 15,9M7,9A1,1 0 0,1 8,8A1,1 0 0,1 9,9A1,1 0 0,1 8,10A1,1 0 0,1 7,9M16.12,4.37L18.22,2.27L17.4,1.44L15.09,3.75C14.16,3.28 13.11,3 12,3C10.89,3 9.84,3.28 8.91,3.75L6.6,1.44L5.78,2.27L7.88,4.37C6.14,5.64 5,7.68 5,10V11H19V10C19,7.68 17.86,5.64 16.12,4.37M5,16C5,19.86 8.13,23 12,23C15.87,23 19,19.86 19,16V12H5V16Z" /></svg>
+                        <span class="en">Download on Android</span>
+                        <span class="fr">Version Android Gratuite</span>
+                    </a>
+                </div>
+                <div class="dl-note animate-on-scroll">
+                    <span class="en">Free · No account required · Works offline</span>
+                    <span class="fr">Sans compte · Totalement gratuit · Mode Hors Ligne</span>
+                </div>
+            </div>
+        </section>
+        
+    </div>
+
+    <!-- PRIVACY POLICY PAGE -->
+    <div id="privacy-page" class="page">
+        <section class="privacy-hero">
+            <div class="container">
+                <h1 class="privacy-title">
+                    <span class="en">Privacy Policy</span><span class="fr">Confidentialité</span>
+                </h1>
+                <p class="privacy-subtitle">
+                    <span class="en">Last updated: January 2025</span><span class="fr">Mise à jour : Janvier 2025</span>
+                </p>
+                <div class="privacy-back" onclick="showPage('landing')">
+                    <span class="en">← Back to App</span><span class="fr">← Retour à l'application</span>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                </div>
+            </div>
+        </section>
+        <div class="container">
+            <div class="privacy-content en">
+                <h2>1. Introduction</h2>
+                <p>AgroCalc Pro ("we", "our", or "the app") is committed to protecting your privacy. This Privacy Policy explains how we handle information when you use our mobile application.</p>
+
+                <h2>2. Information We Do Not Collect</h2>
+                <p>AgroCalc Pro does NOT collect:</p>
+                <ul>
+                    <li>Personal identification information</li>
+                    <li>Location data</li>
+                    <li>Contact information</li>
+                    <li>Usage analytics or telemetry</li>
+                    <li>Any data that leaves your device</li>
+                </ul>
+
+                <h2>3. How the App Works</h2>
+                <p>AgroCalc Pro operates entirely offline on your device. All calculations are performed locally. No data is transmitted to any server. No account or registration is required. No internet connection is needed to use the app.</p>
+
+                <h2>4. PDF Reports</h2>
+                <p>When you generate a PDF report, the file is created locally on your device. When you choose to share a report via WhatsApp, Email, or other apps, you are sharing it directly from your device using your phone's native share system. We do not receive or store any copy of your reports.</p>
+
+                <h2>5. Third-Party Services</h2>
+                <p>The app does not integrate with any third-party analytics, advertising, or tracking services. The app uses the following Flutter packages that operate locally: pdf, printing, path_provider, share_plus. None of these transmit data externally.</p>
+
+                <h2>6. Children's Privacy</h2>
+                <p>AgroCalc Pro is designed for professional use by agronomists and farmers. We do not knowingly collect any information from children under 13.</p>
+
+                <h2>7. Changes to This Policy</h2>
+                <p>We may update this Privacy Policy from time to time. We will notify users of any significant changes by updating the date at the top of this page. Continued use of the app after changes constitutes acceptance of the new policy.</p>
+
+                <h2>8. Contact Us</h2>
+                <p>If you have any questions about this Privacy Policy, please contact us at:</p>
+                <div class="contact-card">📧 contact@agrocalcpro.com</div>
+            </div>
+            
+            <div class="privacy-content fr">
+                <h2>1. Introduction</h2>
+                <p>AgroCalc Pro ("nous", "l'application") s'engage à protéger votre confidentialité. Cette politique explique comment nous traitons vos données lors de l'utilisation de l'application mobile.</p>
+
+                <h2>2. Données Non Collectées</h2>
+                <p>AgroCalc Pro NE RECUEILLE AUCUNE des données suivantes :</p>
+                <ul>
+                    <li>Informations d'identification personnelle</li>
+                    <li>Données de localisation</li>
+                    <li>Informations de contact</li>
+                    <li>Analytiques d'usage ou télémétrie</li>
+                    <li>Données en direction de serveurs externes</li>
+                </ul>
+
+                <h2>3. Fonctionnement Hors Ligne</h2>
+                <p>À 100% hébergée sur votre appareil, aucune connexion internet n'est nécessaire. AgroCalc Pro effectue tous les calculs NPK de manière locale sans compte ou abonnement requis.</p>
+
+                <h2>4. Rapports PDF</h2>
+                <p>Vos bulletins et rapports PDF d'analyses sont générés dans la mémoire locale de votre appareil uniquement. Libref partage les fichiers natifs ou vers la messagerie de votre choix (WhatsApp, Gmail, etc). Nous n'avons aucun accès à ces copies ou exports.</p>
+
+                <h2>5. Services Tiers</h2>
+                <p>Aucun SDK de surveillance (Facebook/Google Ads). Les seuls packages Flutter sont stricts aux utilitaires PDF (pdf, printing, share_plus) qui ne diffusent rien de façon externe.</p>
+
+                <h2>6. Confidentialité des Enfants</h2>
+                <p>Destinée aux cadres agronomiques et exploitants agricoles, nous visons un public de professionnels. Nous ne recueillions aucune donnée auprès du grand public y compris des moins de 13 ans.</p>
+
+                <h2>7. Modifications du Règlement</h2>
+                <p>Ce règlement n'est appelé à n'être retouché qu'à des fins légales sans jamais affaiblir votre autonomie offline vis-à-vis de l'application ou inclure un SDK tracker surprise. Utiliser AgroCalc vaudrait compréhension de ladite politique.</p>
+
+                <h2>8. Contact</h2>
+                <p>En cas de question ou plainte, formulez-la formellement à :</p>
+                <div class="contact-card">📧 contact@agrocalcpro.com</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <div class="footer-logo">
+                        <img src="logo.png" class="footer-logo-img" alt="AgroCalc Logo" onerror="this.style.display='none'">
+                        AgroCalc Pro
+                    </div>
+                    <div class="footer-tagline">
+                        <span class="en">Fertigation Intelligence</span><span class="fr">Intelligence Fertigation</span>
+                    </div>
+                    <div class="footer-desc">
+                        <span class="en">Professional NPK calculator for modern precision agriculture.</span>
+                        <span class="fr">Calculateur de fertigation et agronome virtuel pour une agriculture connectée.</span>
+                    </div>
+                </div>
+                <div>
+                    <div class="footer-col-title">Navigation</div>
+                    <ul class="footer-links">
+                        <li><a href="#features" onclick="handleNavClick('landing', 'features')">
+                            <span class="en">Features</span><span class="fr">Fonctionnalités</span>
+                        </a></li>
+                        <li><a href="#how-it-works" onclick="handleNavClick('landing', 'how-it-works')">
+                            <span class="en">How It Works</span><span class="fr">Comment Ça Marche</span>
+                        </a></li>
+                        <li><a href="#screenshots" onclick="handleNavClick('landing', 'screenshots')">
+                            <span class="en">Screenshots</span><span class="fr">Captures d'écran</span>
+                        </a></li>
+                        <li><a href="#download" onclick="handleNavClick('landing', 'download')">
+                            <span class="en">Download</span><span class="fr">Plateforme Download</span>
+                        </a></li>
+                    </ul>
+                </div>
+                <div>
+                    <div class="footer-col-title">
+                        <span class="en">Legal</span><span class="fr">Mentions Légales</span>
+                    </div>
+                    <ul class="footer-links">
+                        <li><a href="#" onclick="showPage('privacy'); return false;">
+                            <span class="en">Privacy Policy</span><span class="fr">Confidentialité</span>
+                        </a></li>
+                        <li><a href="#">
+                            <span class="en">Terms of Use</span><span class="fr">Conditions du Service</span>
+                        </a></li>
+                    </ul>
+                    <div class="footer-text">© 2025 AgroCalc Pro<br>
+                        <span class="en">All rights reserved.</span><span class="fr">Tous droits réservés.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span class="en">Built with Flutter · Made for Agriculture</span>
+                <span class="fr">Propulsé sous technologie Flutter · Taillé pour l'Agriculture</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Language System
+        function setLang(lang) {
+            document.documentElement.lang = lang;
+            document.querySelectorAll('.lang-toggle').forEach(el => {
+                el.classList.remove('active-lang');
+                if (el.innerText.toLowerCase() === lang) {
+                    el.classList.add('active-lang');
+                }
+            });
+            // Save preference loosely if needed localStorage.setItem('lang', lang);
+        }
+        
+        // Page Navigation
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+            document.getElementById(pageId + '-page').style.display = 'block';
+            window.scrollTo({top: 0, behavior: 'smooth'});
+            
+            const nav = document.getElementById('navbar');
+            if(nav.classList.contains('nav-open')) nav.classList.remove('nav-open');
+        }
+
+        function handleNavClick(pageId, sectionId) {
+            if (document.getElementById(pageId + '-page').style.display === 'none') {
+                showPage(pageId);
+                setTimeout(() => {
+                    const section = document.getElementById(sectionId);
+                    if(section) section.scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+            } else {
+                const section = document.getElementById(sectionId);
+                if(section) section.scrollIntoView({ behavior: 'smooth' });
+            }
+            document.getElementById('navbar').classList.remove('nav-open');
+        }
+
+        function toggleMenu() { document.getElementById('navbar').classList.toggle('nav-open'); }
+
+        // Scroll Animations using Intersection Observer
+        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+
+        // Navbar Scroll Effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) navbar.classList.add('scrolled');
+            else navbar.classList.remove('scrolled');
+        });
+
+        // Active Link Highlighting
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.site-link');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (window.scrollY >= (sectionTop - 200)) current = section.getAttribute('id');
+            });
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) link.classList.add('active');
+            });
+        });
+        
+        // Init default lang
+        setLang('en');
+    </script>
+</body>
+</html>
