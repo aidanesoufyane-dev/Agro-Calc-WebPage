@@ -1,0 +1,23 @@
+{
+  "name": "AgroCalc Pro",
+  "short_name": "AgroCalc Pro",
+  "description": "NPK and fertigation calculator for Android.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F6F5EE",
+  "theme_color": "#193C2C",
+  "icons": [
+    {
+      "src": "/favicon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

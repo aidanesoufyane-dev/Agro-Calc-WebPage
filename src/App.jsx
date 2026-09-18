@@ -9,7 +9,7 @@ import { BlogPage, NewArticlePage } from './components/BlogPages'
 import { FertilizerCalculatorPage, IrrigationCalculatorPage, CropPlanningPage, FertilizerBlogPage, GreenhouseEcGuidePage, TankMixingGuidePage, TomatoFertigationGuidePage } from './components/SeoPages'
 import PrivacyPage from './components/PrivacyPage'
 import NotFoundPage from './components/NotFoundPage'
-import { SITE_URL, corePages } from './content/site'
+import { SITE_URL, PLAY_STORE_URL, corePages } from './content/site'
 import { blogPosts, blogPath } from './content/blog'
 
 export default function App() {
@@ -18,21 +18,23 @@ export default function App() {
   const location = useLocation()
   const pathname = location.pathname.replace(/\/$/, '') || '/'
   const post = blogPosts.find(p => blogPath(p) === pathname)
-  const meta = corePages[pathname] || (post && {title:`${post.title} | AgroCalc Pro`,description:post.description})
+  const meta = corePages[pathname] || (post && {title:`${post.title} | AgroCalc Pro Blog`,description:post.description})
   const isNotFound = !meta
   const title = meta?.title || 'Page Not Found | AgroCalc Pro'
   const description = meta?.description || 'The requested page could not be found.'
   const canonical = SITE_URL + pathname
+  const searchVerification = import.meta.env.VITE_GOOGLE_SITE_VERIFICATION?.trim()
   const schema = post ? {
     '@context':'https://schema.org', '@type':'Article', headline:post.title, description:post.description,
-    url:canonical, mainEntityOfPage:canonical, image:`${SITE_URL}/og-image.png`, inLanguage:'en',
+    url:canonical, mainEntityOfPage:canonical, inLanguage:'en',
+    about:{'@type':'Thing',name:'Fertigation'},
     publisher:{'@type':'Organization',name:'AgroCalc Pro',url:SITE_URL},
   } : pathname === '/blog' ? {
     '@context':'https://schema.org','@type':'CollectionPage',name:title,url:canonical,
     mainEntity:{'@type':'ItemList',itemListElement:blogPosts.map((p,i)=>({'@type':'ListItem',position:i+1,name:p.title,url:SITE_URL+blogPath(p)}))},
   } : pathname === '/' ? {
     '@context':'https://schema.org','@type':'SoftwareApplication',name:'AgroCalc Pro',operatingSystem:'Android',applicationCategory:'BusinessApplication',url:SITE_URL,
-    description,offers:{'@type':'Offer',price:'0',priceCurrency:'USD'},
+    description,installUrl:PLAY_STORE_URL,offers:{'@type':'Offer',price:'0',priceCurrency:'USD'},
   } : null
   const breadcrumbs = post ? {'@context':'https://schema.org','@type':'BreadcrumbList',itemListElement:[
     {'@type':'ListItem',position:1,name:'AgroCalc Pro',item:SITE_URL},
@@ -57,9 +59,10 @@ export default function App() {
   return <>
     <Helmet>
       <title>{title}</title><meta name="description" content={description}/>
+      {searchVerification && <meta name="google-site-verification" content={searchVerification}/>}
       <meta name="robots" content={isNotFound?'noindex, follow':'index, follow'}/>
       {!isNotFound && <link rel="canonical" href={canonical}/>}
-      <meta property="og:type" content={post?'article':'website'}/><meta property="og:url" content={canonical}/><meta property="og:title" content={title}/><meta property="og:description" content={description}/><meta property="og:image" content={`${SITE_URL}/og-image.png`}/><meta property="og:site_name" content="AgroCalc Pro"/>
+      <meta property="og:type" content={post?'article':'website'}/><meta property="og:url" content={canonical}/><meta property="og:title" content={post?.title || title}/><meta property="og:description" content={description}/><meta property="og:image" content={`${SITE_URL}/og-image.png`}/><meta property="og:site_name" content="AgroCalc Pro"/>
       <meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content={title}/><meta name="twitter:description" content={description}/><meta name="twitter:image" content={`${SITE_URL}/og-image.png`}/>
       {schema && <script type="application/ld+json">{JSON.stringify(schema)}</script>}{breadcrumbs && <script type="application/ld+json">{JSON.stringify(breadcrumbs)}</script>}
     </Helmet>

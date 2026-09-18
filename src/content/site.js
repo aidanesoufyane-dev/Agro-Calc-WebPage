@@ -1,4 +1,5 @@
 ﻿export const SITE_URL = 'https://agrocalcpro.soufyanedev.com'
+export const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.soufyanedev.agrocalcpro'
 export const corePages = {
   '/': { title:'AgroCalc Pro | NPK Fertigation Calculator for Android', description:'Calculate NPK solutions, review ionic balance and EC, distribute fertilizers into A/B/C tanks, and export PDF reports. Free Android app that works offline.' },
   '/blog': { title:'Field Notes: Fertigation & NPK Guides | AgroCalc Pro', description:'Practical guides to fertilizer calculations, water quality, EC, tank mixing, crop nutrition, and fertigation reports.' },

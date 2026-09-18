@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { T } from './LandingPage'
 import { ArticleLinks } from './BlogPages'
 
-const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.soufyanedev.agrocalcpro'
+import { PLAY_STORE_URL } from '../content/site'
 
 function SeoHero({ labelEn, labelFr, titleEn, titleFr, subtitleEn, subtitleFr, fieldNote }) {
   return (
@@ -107,6 +107,14 @@ export function FertilizerCalculatorPage() {
             },
           ]}
         />
+      </SeoSection>
+
+      <SeoSection titleEn="How the Android calculator works" titleFr="Comment fonctionne le calculateur Android">
+        <div className="seo-article">
+          <p><T en="Enter the quantities of supported fertilizers, the tank volume, the field area and the EC of your irrigation water in the AgroCalc Pro app. The app calculates nutrient concentrations, fertilizer units per hectare, ionic balance and an estimated EC for the resulting solution." fr="Dans l’application AgroCalc Pro, saisissez les quantités d’engrais pris en charge, le volume du bac, la surface cultivée et l’EC de l’eau d’irrigation. L’application calcule les concentrations nutritives, les unités fertilisantes par hectare, la balance ionique et une EC estimée pour la solution obtenue."/></p>
+          <p><T en="Review the A/B/C tank distribution before mixing, then export the formulation as a PDF. The website explains the workflow; the calculations run in the Android app. Check the delivered solution with a calibrated meter and use local crop guidance when setting nutrient targets." fr="Vérifiez la répartition entre les bacs A/B/C avant le mélange, puis exportez la formule en PDF. Le site explique la méthode ; les calculs s’effectuent dans l’application Android. Contrôlez la solution distribuée avec un appareil étalonné et utilisez des références locales pour fixer les objectifs nutritifs."/></p>
+          <p><T en="For the details, read the " fr="Pour approfondir, consultez le "/><Link to="/blog/how-to-calculate-fertilizer"><T en="fertilizer calculation guide" fr="guide de calcul des engrais"/></Link>, <Link to="/blog/ec-in-greenhouse-crops"><T en="greenhouse EC guide" fr="guide de l’EC sous serre"/></Link> <T en="and " fr="et le "/><Link to="/blog/how-to-mix-a-b-c-tanks"><T en="A/B/C tank mixing guide" fr="guide du mélange des bacs A/B/C"/></Link>.</p>
+        </div>
       </SeoSection>
 
       <SeoSection titleEn="Download AgroCalc Pro" titleFr="Telecharger AgroCalc Pro">

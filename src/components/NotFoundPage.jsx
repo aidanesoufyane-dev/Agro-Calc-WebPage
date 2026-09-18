@@ -1,39 +1,19 @@
-import { Helmet } from 'react-helmet-async'
+import { Link } from 'react-router-dom'
+import { T } from './LandingPage'
 
-export default function NotFoundPage({ showPage }) {
-  return (
-    <div className="not-found-page">
-      <Helmet>
-        <title>404 Page Not Found | AgroCalcPro</title>
-        <meta name="description" content="The requested page could not be found on AgroCalcPro." />
-        <meta name="robots" content="noindex, nofollow" />
-      </Helmet>
-
-      <section className="not-found-hero">
-        <div className="container not-found-content">
-          <span className="section-label light">
-            <span className="en">404 Error</span><span className="fr">Erreur 404</span>
-          </span>
-          <h1 className="not-found-title">
-            <span className="en">Page not found</span>
-            <span className="fr">Page introuvable</span>
-          </h1>
-          <p className="not-found-text">
-            <span className="en">The page you are looking for does not exist or has been moved.</span>
-            <span className="fr">La page demandee n'existe pas ou a ete deplacee.</span>
-          </p>
-          <div className="not-found-actions">
-            <button className="btn btn-primary" onClick={() => showPage('landing')}>
-              <span className="en">Go to Home</span>
-              <span className="fr">Retour accueil</span>
-            </button>
-            <button className="btn btn-secondary" onClick={() => showPage('privacy')}>
-              <span className="en">Privacy Policy</span>
-              <span className="fr">Confidentialite</span>
-            </button>
-          </div>
+export default function NotFoundPage() {
+  return <main className="not-found-page">
+    <section className="not-found-hero">
+      <div className="container not-found-content">
+        <span className="section-label light"><T en="404 Error" fr="Erreur 404"/></span>
+        <h1 className="not-found-title"><T en="Page not found" fr="Page introuvable"/></h1>
+        <p className="not-found-text"><T en="The page you are looking for does not exist or has been moved." fr="La page demandée n’existe pas ou a été déplacée."/></p>
+        <div className="not-found-actions">
+          <Link className="btn btn-primary" to="/"><T en="Go to Home" fr="Retour à l’accueil"/></Link>
+          <Link className="btn btn-secondary" to="/fertilizer-calculator"><T en="Fertilizer Calculator" fr="Calculateur d’engrais"/></Link>
+          <Link className="btn btn-secondary" to="/blog"><T en="Browse Guides" fr="Consulter les guides"/></Link>
         </div>
-      </section>
-    </div>
-  )
+      </div>
+    </section>
+  </main>
 }
