@@ -18,7 +18,8 @@ These are the active website values. Use the first five as the shared core palet
 | --- | --- | --- | --- |
 | Ink / primary green | #193C2C | Main text, primary buttons, dark CTA | Top bar, primary actions, key values |
 | Paper | #F6F5EE | Main page background | Default screen background |
-| Muted text | #69746A | Supporting copy | Secondary labels and descriptions |
+| Muted text | #4B574D | Supporting copy (6.4–7.6:1 on every light surface) | Secondary labels and descriptions |
+| Text green | #3F6B2A | Green labels, links and small accents on light surfaces (≥5.2:1) | Links, selected labels, small accents |
 | Line | #DCDED2 | Hairline borders and dividers | List separators and input outlines |
 | Soft lime | #D9ED9C | Light accent and dark-section button | Selected states and light accent surfaces |
 | White | #FFFFFF | Blog cards and article body | Cards and elevated surfaces |
@@ -31,7 +32,7 @@ These are the active website values. Use the first five as the shared core palet
 | CTA mint | #F1F8E9 | Article download callout | Subtle recommendation or success panel |
 | CTA border | #A5D6A7 | Article callout outline | Callout border |
 
-Use Ink on Paper for the default reading state. On a dark Ink surface, use Paper or White text and Soft Lime for the action. Muted text belongs on light surfaces; do not use it for important values on dark green. Soft Lime is an accent, not the default paragraph color. A native dark mode is not currently defined by the website; design and test it separately rather than reversing these colors mechanically.
+Use Ink on Paper for the default reading state. On a dark Ink surface, use Paper or White text and Soft Lime for the action. Never set text in a lighter grey than Muted, and never below 12 px. Muted text belongs on light surfaces; do not use it for important values on dark green. Soft Lime is an accent, not the default paragraph color. A native dark mode is not currently defined by the website; design and test it separately rather than reversing these colors mechanically.
 
 ### Category and status accents
 

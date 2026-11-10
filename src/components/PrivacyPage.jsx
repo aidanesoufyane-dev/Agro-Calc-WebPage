@@ -1,4 +1,8 @@
+import { T, useLang } from '../lib/i18n'
+import Icon from './Icon'
+
 export default function PrivacyPage({ showPage }) {
+  const lang = useLang()
   return (
     <main id="privacy-page">
       
@@ -6,20 +10,20 @@ export default function PrivacyPage({ showPage }) {
       <section className="privacy-hero">
         <div className="container">
           <h1 className="privacy-title">
-            <span className="en">Privacy Policy</span><span className="fr">Confidentialité</span>
+            <T en={<>Privacy Policy</>} fr={<>Confidentialité</>} es={<>Política de privacidad</>}/>
           </h1>
           <p className="privacy-subtitle">
-            <span className="en">Last updated: January 2025</span><span className="fr">Mise à jour : Janvier 2025</span>
+            <T en={<>Last updated: January 2025</>} fr={<>Mise à jour : Janvier 2025</>} es={<>Última actualización: enero de 2025</>}/>
           </p>
           <button type="button" className="privacy-back" onClick={() => showPage('landing')}>
-            <span className="en">← Back to App</span><span className="fr">← Retour à l'application</span>
+            <Icon name="arrow-left"/><T en={<>Back to the app</>} fr={<>Retour à l'application</>} es={<>Volver a la app</>}/>
           </button>
           
         </div>
       </section>
 
       <div className="container">
-        <div className="privacy-content en">
+        {lang === 'en' && <div className="privacy-content en">
           <h2>1. Introduction</h2>
           <p>AgroCalc Pro ("we", "our", or "the app") is committed to protecting your privacy. This Privacy Policy explains how we handle information when you use our mobile application.</p>
 
@@ -50,42 +54,76 @@ export default function PrivacyPage({ showPage }) {
 
           <h2>8. Contact Us</h2>
           <p>If you have any questions about this Privacy Policy, please contact us at:</p>
-          <div className="contact-card">📧 sefyan.aidan.m@gmail.com</div>
-        </div>
+          <div className="contact-card"><Icon name="mail"/><a href="mailto:sefyan.aidan.m@gmail.com">sefyan.aidan.m@gmail.com</a></div>
+        </div>}
 
-        <div className="privacy-content fr">
-          <h2>1. Introduction</h2>
-          <p>AgroCalc Pro ("nous", "l'application") s'engage à protéger votre confidentialité. Cette politique explique comment nous traitons vos données lors de l'utilisation de l'application mobile.</p>
+        {lang === 'es' && <div className="privacy-content es">
+          <h2>1. Introducción</h2>
+          <p>AgroCalc Pro («nosotros» o «la app») se compromete a proteger su privacidad. Esta política explica cómo tratamos la información cuando usa nuestra aplicación móvil.</p>
 
-          <h2>2. Données Non Collectées</h2>
-          <p>AgroCalc Pro NE RECUEILLE AUCUNE des données suivantes :</p>
+          <h2>2. Información que no recopilamos</h2>
+          <p>AgroCalc Pro NO recopila:</p>
           <ul>
-            <li>Informations d'identification personnelle</li>
-            <li>Données de localisation</li>
-            <li>Informations de contact</li>
-            <li>Analytiques d'usage ou télémétrie</li>
-            <li>Données en direction de serveurs externes</li>
+            <li>Datos de identificación personal</li>
+            <li>Datos de ubicación</li>
+            <li>Datos de contacto</li>
+            <li>Estadísticas de uso ni telemetría</li>
+            <li>Ningún dato que salga de su dispositivo</li>
           </ul>
 
-          <h2>3. Fonctionnement Hors Ligne</h2>
-          <p>À 100% hébergée sur votre appareil, aucune connexion internet n'est nécessaire. AgroCalc Pro effectue tous les calculs NPK de manière locale sans compte ou abonnement requis.</p>
+          <h2>3. Cómo funciona la app</h2>
+          <p>AgroCalc Pro funciona por completo sin conexión en su dispositivo. Todos los cálculos se hacen localmente. No se envía ningún dato a ningún servidor. No hace falta cuenta ni registro, ni conexión a internet para usar la app.</p>
+
+          <h2>4. Informes PDF</h2>
+          <p>Cuando genera un informe PDF, el archivo se crea en su dispositivo. Cuando decide compartirlo por WhatsApp, correo u otras apps, lo comparte directamente desde su dispositivo con el sistema para compartir de su teléfono. No recibimos ni guardamos ninguna copia de sus informes.</p>
+
+          <h2>5. Servicios de terceros</h2>
+          <p>La app no integra ningún servicio de terceros de analítica, publicidad o seguimiento. Usa los siguientes paquetes de Flutter, que funcionan localmente: pdf, printing, path_provider, share_plus. Ninguno de ellos envía datos al exterior.</p>
+
+          <h2>6. Privacidad de los menores</h2>
+          <p>AgroCalc Pro está pensada para el uso profesional de agrónomos y agricultores. No recopilamos a sabiendas información de menores de 13 años.</p>
+
+          <h2>7. Cambios en esta política</h2>
+          <p>Podemos actualizar esta política de privacidad. Avisaremos de cualquier cambio importante actualizando la fecha de la parte superior de esta página. Seguir usando la app después de los cambios supone aceptar la nueva política.</p>
+
+          <h2>8. Contacto</h2>
+          <p>Si tiene alguna pregunta sobre esta política de privacidad, escríbanos a:</p>
+          <div className="contact-card"><Icon name="mail"/><a href="mailto:sefyan.aidan.m@gmail.com">sefyan.aidan.m@gmail.com</a></div>
+        </div>}
+
+        {lang === 'fr' && <div className="privacy-content fr">
+          <h2>1. Introduction</h2>
+          <p>AgroCalc Pro (« nous » ou « l’application ») s’engage à protéger votre vie privée. Cette politique explique comment nous traitons les informations lorsque vous utilisez notre application mobile.</p>
+
+          <h2>2. Informations que nous ne collectons pas</h2>
+          <p>AgroCalc Pro ne collecte PAS :</p>
+          <ul>
+            <li>d’informations d’identification personnelle ;</li>
+            <li>de données de localisation ;</li>
+            <li>de coordonnées ;</li>
+            <li>de statistiques d’utilisation ni de télémétrie ;</li>
+            <li>aucune donnée qui quitte votre appareil.</li>
+          </ul>
+
+          <h2>3. Fonctionnement de l’application</h2>
+          <p>AgroCalc Pro fonctionne entièrement hors ligne sur votre appareil. Tous les calculs sont effectués localement. Aucune donnée n’est transmise à un serveur. Aucun compte ni inscription n’est nécessaire, et l’application s’utilise sans connexion internet.</p>
 
           <h2>4. Rapports PDF</h2>
-          <p>Vos bulletins et rapports PDF d'analyses sont générés dans la mémoire locale de votre appareil uniquement. Libref partage les fichiers natifs ou vers la messagerie de votre choix (WhatsApp, Gmail, etc). Nous n'avons aucun accès à ces copies ou exports.</p>
+          <p>Lorsque vous générez un rapport PDF, le fichier est créé sur votre appareil. Lorsque vous le partagez par WhatsApp, e-mail ou une autre application, vous le partagez directement depuis votre appareil grâce au système de partage de votre téléphone. Nous ne recevons ni ne conservons aucune copie de vos rapports.</p>
 
-          <h2>5. Services Tiers</h2>
-          <p>Aucun SDK de surveillance (Facebook/Google Ads). Les seuls packages Flutter sont stricts aux utilitaires PDF (pdf, printing, share_plus) qui ne diffusent rien de façon externe.</p>
+          <h2>5. Services tiers</h2>
+          <p>L’application n’intègre aucun service tiers d’analyse, de publicité ou de suivi. Elle utilise les modules Flutter suivants, qui fonctionnent localement : pdf, printing, path_provider, share_plus. Aucun d’eux ne transmet de données à l’extérieur.</p>
 
-          <h2>6. Confidentialité des Enfants</h2>
-          <p>Destinée aux cadres agronomiques et exploitants agricoles, nous visons un public de professionnels. Nous ne recueillions aucune donnée auprès du grand public y compris des moins de 13 ans.</p>
+          <h2>6. Protection des enfants</h2>
+          <p>AgroCalc Pro est destinée à un usage professionnel par les agronomes et les agriculteurs. Nous ne collectons sciemment aucune information auprès d’enfants de moins de 13 ans.</p>
 
-          <h2>7. Modifications du Règlement</h2>
-          <p>Ce règlement n'est appelé à n'être retouché qu'à des fins légales sans jamais affaiblir votre autonomie offline vis-à-vis de l'application ou inclure un SDK tracker surprise. Utiliser AgroCalc vaudrait compréhension de ladite politique.</p>
+          <h2>7. Modifications de cette politique</h2>
+          <p>Nous pouvons mettre à jour cette politique de confidentialité. Toute modification importante sera signalée par la mise à jour de la date en haut de cette page. Continuer à utiliser l’application après une modification vaut acceptation de la nouvelle politique.</p>
 
           <h2>8. Contact</h2>
-          <p>En cas de question ou plainte, formulez-la formellement à :</p>
-          <div className="contact-card">📧 sefyan.aidan.m@gmail.com</div>
-        </div>
+          <p>Pour toute question sur cette politique de confidentialité, écrivez-nous à :</p>
+          <div className="contact-card"><Icon name="mail"/><a href="mailto:sefyan.aidan.m@gmail.com">sefyan.aidan.m@gmail.com</a></div>
+        </div>}
       </div>
     </main>
   )
